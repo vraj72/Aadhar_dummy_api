@@ -3,13 +3,16 @@ var router = express.Router();
 const assert = require('assert');
 
 
+
+
+
 var nodemailer = require('nodemailer');
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'softmandev123@gmail.com',
-    pass: 'software254'
+    user: '***********@gmail.com',
+    pass: '********'
   }
 });
 
@@ -17,13 +20,13 @@ var transporter = nodemailer.createTransport({
 var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "localhost",
-  user: "viraj",
-  password: "qwerty",
+  user: "*****",
+  password: "******",
   database:"aadharDB"
 });
 
 function getRandomInt() {
-  min = Math.ceil(0);
+  min = Math.ceil(100000);
   max = Math.floor(999999);
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
@@ -34,7 +37,7 @@ con.connect(function(err) {
   console.log("Connected!");
 });
 
-router.post('/verify',(req,res)=>{
+router.post('/verify',(req,res,next)=>{
 
 				console.log("verify called "+req.body.aadharno);
 				var usrn= Number(req.body.aadharno);
@@ -57,23 +60,31 @@ router.post('/verify',(req,res)=>{
 				               ,"email":results[0].email
 				             });
 
+					     	const otp= getRandomInt();
+
 					     	
 
 
-					     	var mailOptions = {
-							  from: 'AADHAR UIDAI',
-							  to: results[0].email,
-							  subject: 'Aadhar Authentication OTP',
-							  text: 'OTP for Your Aadhar Authentication is '+getRandomInt()
-							};
+					  //    	var mailOptions = {
+							//   from: 'AADHAR UIDAI',
+							//   to: results[0].email,
+							//   subject: 'Aadhar Authentication OTP',
+							//   text: 'OTP for Your Aadhar Authentication is '+otp
+							// };
 
-							transporter.sendMail(mailOptions, function(error, info){
-							  if (error) {
-							    console.log(error);
-							  } else {
-							    console.log('Email sent: ' + info.response);
-							  }
-							}); 
+							// transporter.sendMail(mailOptions, function(error, info){
+							//   if (error) {
+							//     console.log(error);
+							//   } else {
+							//     console.log('Email sent: ' + info.response);
+							//   }
+							// }); 
+
+							req.session.aadhar = req.body.aadharno;
+							req.session.otp = otp;
+							console.log("session ",req.session.aadhar,req.session.otp); 
+							req.session.cookie.expires = new Date(Date.now() + 900000)
+							req.session.save();
 
 
 					     }
@@ -87,6 +98,25 @@ router.post('/verify',(req,res)=>{
 
     			});
 
+    			
+			});
+
+router.post('/verifyOTP',(req,res)=>{
+
+				console.log("verify OTP called "+req.body.aadharno+"req session aadhar"+req.session.aadhar+"req body otp"+req.body.OTP+"req session otp"+req.session.otp);
+				var usrn= Number(req.body.aadharno);
+
+				if(req.session.aadhar && req.session.otp == req.body.OTP){
+					console.log("session verified",req.session.aadhar,req.session.otp,req.session.cookie.maxAge);
+					
+					
+						res.sendStatus(200);
+				}
+				else{
+					
+					res.sendStatus(404);
+				}
+    			
     			
 			});
 

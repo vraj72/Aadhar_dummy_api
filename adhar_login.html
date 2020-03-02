@@ -12,11 +12,13 @@
 <header>
 	<script type="text/javascript">
 		var xhr = new XMLHttpRequest();
+		var xhr2 = new XMLHttpRequest();
+		var usrn;
 
 		
 		function send() {
 			// body...
-			var usrn = document.getElementById("aadharno").value;
+			usrn = document.getElementById("aadharno").value;
 			if(usrn.length != 12)
 			{
 					   alert("Invalid Aadhar");
@@ -25,12 +27,8 @@
 			}
 			
 
-			var a = {
-			'aadharno':usrn
-		}
-		console.log(JSON.stringify(a));
-
-		xhr.open('POST', 'http://192.168.0.6:8081/verify', true);
+			
+		xhr.open('POST', 'http://192.168.43.110:8081/verify', true);
 		xhr.setRequestHeader('Content-Type','application/json');
 		xhr.send(JSON.stringify({"aadharno":usrn}));
 		
@@ -48,7 +46,46 @@
 
     		}
     	}
+
+
+
+    	function verify() {
+			// body...
+
+			var otp = document.getElementById("otp").value;
+			if(otp.length != 6)
+			{
+					   alert("Invalid OTP");
+					   return false;
+			
+			}
+			
+			
+		xhr2.open('POST', 'http://192.168.43.110:8081/verifyOTP', true);
+		xhr2.setRequestHeader('Content-Type','application/json');
+		xhr2.send(JSON.stringify({"aadharno":usrn,'OTP': otp}));
+		
+		xhr2.onload = function() {
+    		if (xhr2.status == 200) {
+
+    			alert("Sucessfully Authenticated !");
+    			
+    			
+    		}
+    		else{
+    			console.log("erroron");
+  		 alert("Invalid OTP");
+		}
+
+    		}
+    	}
+
+
     	xhr.onerror = function(){
+    	alert("check network");	
+			
+		}
+		xhr2.onerror = function(){
     	alert("check network");	
 			
 		}
