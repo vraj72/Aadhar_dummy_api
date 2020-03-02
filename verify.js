@@ -65,25 +65,25 @@ router.post('/verify',(req,res,next)=>{
 					     	
 
 
-					  //    	var mailOptions = {
-							//   from: 'AADHAR UIDAI',
-							//   to: results[0].email,
-							//   subject: 'Aadhar Authentication OTP',
-							//   text: 'OTP for Your Aadhar Authentication is '+otp
-							// };
+					  	var mailOptions = {
+							 from: 'AADHAR UIDAI',
+							   to: results[0].email,
+							   subject: 'Aadhar Authentication OTP',
+							   text: 'OTP for Your Aadhar Authentication is '+otp
+							 };
 
-							// transporter.sendMail(mailOptions, function(error, info){
-							//   if (error) {
-							//     console.log(error);
-							//   } else {
-							//     console.log('Email sent: ' + info.response);
-							//   }
-							// }); 
+							 transporter.sendMail(mailOptions, function(error, info){
+							   if (error) {
+							     console.log(error);
+							   } else {
+							     console.log('Email sent: ' + info.response);
+							   }
+							 }); 
 
 							req.session.aadhar = req.body.aadharno;
 							req.session.otp = otp;
 							console.log("session ",req.session.aadhar,req.session.otp); 
-							req.session.cookie.expires = new Date(Date.now() + 900000)
+							req.session.cookie.expires = new Date(Date.now() + 90000)
 							req.session.save();
 
 
