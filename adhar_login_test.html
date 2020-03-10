@@ -13,62 +13,81 @@
 	<script type="text/javascript">
 		var xhr = new XMLHttpRequest();
 		var xhr2 = new XMLHttpRequest();
-		var usrn;
+		var usrn,otp;
 
 
 		
-		// function send() {
-		// 	// body...
-		// 	usrn = document.getElementById("aadharno").value;
-		// 	if(usrn.length != 12)
-		// 	{
-		// 			   alert("Invalid Aadhar");
-		// 			   return false;
+		function send() {
+			// body...
+			usrn = document.getElementById("aadharno").value;
+			if(usrn.length != 12)
+			{
+					   alert("Invalid Aadhar");
+					   return false;
 			
-		// 	}
+			}
 			
 
 			
-		// xhr.open('POST', 'http://192.168.43.110:8081/verify', true);
-		// xhr.setRequestHeader('Content-Type','application/json');
-		// xhr.send(JSON.stringify({"aadharno":usrn}));
+		xhr.open('POST', 'http://localhost:8081/verify', true);
+		xhr.setRequestHeader('Content-Type','application/json');
+		xhr.send(JSON.stringify({"aadharno":usrn}));
 		
-		// xhr.onload = function() {
-  //   		if (xhr.status == 200) {
-  //   			otp_div.style.visibility='visible';
-		// 	var button_getotp=document.getElementById('get_otp');
-		// 	button_getotp.style.visibility='hidden';
+		xhr.onload = function() {
+    		if (xhr.status == 200) {
+    			otp_div.style.visibility='visible';
+			var button_getotp=document.getElementById('get_otp');
+			button_getotp.style.visibility='hidden';
     			
-  //   		}
-  //   		else{
-  //   			console.log("erroron");
-  // 		 alert("Invalid Aadhar");
-		// }
+    		}
+    		else{
+    			console.log("erroron");
+  		 alert("Invalid Aadhar");
+		}
 
-  //   		}
-  //   	}
+    		}
+    	}
 
 
 
     	function verify() {
 
     		var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+			myHeaders.append("Content-Type", "application/json");
+			otp = document.getElementById("otp").value;
 
-var raw = JSON.stringify({"aadharno":"209545445072","OTP":"173756"});
+			var raw = JSON.stringify({"aadharno":usrn,"OTP":otp});
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+			xhr2.open('POST', 'http://localhost:8081/verifyOTP', true);
+			xhr2.setRequestHeader('Content-Type','application/json');
+			xhr2.send(JSON.stringify({"aadharno":usrn,"OTP":otp}));
+				
+			xhr2.onload = function() {
+	    		if (xhr2.status == 200) {
+	    			alert("verified");
+	    			
+	    		}
+	    		else{
+	    			console.log("erroron");
+	  		 alert("Invalid OTP");
+			}
 
-fetch("http://192.168.43.110:8081/verifyOTP", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
+	    		}
+
+			// var requestOptions = {
+			//   method: 'POST',
+			//   headers: myHeaders,
+			//   body: raw,
+			//   redirect: 'follow'
+			// };
+
+			// fetch("http://192.168.0.6:8081/verifyOTP", requestOptions)
+			//   .then(response => response.text())
+			//   .then(result => console.log(result))
+			//   .catch(error => console.log('error', error));
 						// body...
+
+
 
     	}
 
@@ -102,8 +121,8 @@ fetch("http://192.168.43.110:8081/verifyOTP", requestOptions)
 	
 </body>
 <script type="text/javascript">
-	// var otp_div=document.getElementById('otp_div');
-	// 	otp_div.style.visibility='hidden';
+	var otp_div=document.getElementById('otp_div');
+		otp_div.style.visibility='hidden';
 </script>
 
 </html>

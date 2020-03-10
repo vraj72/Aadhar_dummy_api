@@ -28,7 +28,7 @@
 			
 
 			
-		xhr.open('POST', 'http://192.168.43.110:8081/verify', true);
+		xhr.open('POST', 'http://localhost:8081/verify', true);
 		xhr.setRequestHeader('Content-Type','application/json');
 		xhr.send(JSON.stringify({"aadharno":usrn}));
 		
@@ -61,7 +61,7 @@
 			}
 			
 			
-		xhr2.open('POST', 'http://192.168.43.110:8081/verifyOTP', true);
+		xhr2.open('POST', 'http://localhost:8081/verifyOTP', true);
 		xhr2.setRequestHeader('Content-Type','application/json');
 		xhr2.send(JSON.stringify({"aadharno":usrn,'OTP': otp}));
 		
